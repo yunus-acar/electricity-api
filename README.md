@@ -39,7 +39,7 @@ This project includes a REST API that calculates energy consumption based on dat
 
 ## API Documentation
 
-[Swagger](https://blue-station-975199.postman.co/workspace/Polyline-Works~e9ca6997-7686-4710-a279-fd25fd84171c/collection/24319999-04d73af4-0e4a-4fd6-bc3c-b871e4626016?action=share&creator=24319999&active-environment=24319999-d46e9902-a809-4d48-acb7-3a60bac4765f)
+[Postman](https://blue-station-975199.postman.co/workspace/Polyline-Works~e9ca6997-7686-4710-a279-fd25fd84171c/collection/24319999-04d73af4-0e4a-4fd6-bc3c-b871e4626016?action=share&creator=24319999&active-environment=24319999-d46e9902-a809-4d48-acb7-3a60bac4765f)
 
 ## Contact
 
