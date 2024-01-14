@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  registerDate DateTime @default(now())
+  company      Company?
+}
+
+model Company {
+  id          String             @id @default(uuid())
+  name        String
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String             @unique
+  createdAt   DateTime           @default(now())
+  indexes     ElectricityIndex[]
+  Consumption Consumption[]
+}
+
+model ElectricityIndex {
+  id        String   @id @default(uuid())
+  value     Float
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+  date      DateTime
+  createdAt DateTime @default(now())
+}
+
+model Consumption {
+  id        String   @id @default(uuid())
+  value     Float
+  date      DateTime
+  company   Company  @relation(fields: [companyId], references: [id])
+  companyId String
+  createdAt DateTime @default(now())
+}

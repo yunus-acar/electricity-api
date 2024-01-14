@@ -1,0 +1,42 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.5-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - custom_network
+  redis:
+    image: redis:latest
+    restart: always
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - 6379:6379
+    networks:
+      - custom_network
+  api:
+    build: .
+    container_name: api
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    networks:
+      - custom_network
+volumes:
+  db_data:
+    driver: local
+networks:
+  networkName:
+    driver: bridge
