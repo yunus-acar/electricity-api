@@ -2,7 +2,6 @@ import { ElectricityIndex } from "@prisma/client";
 import prisma from "../utils/prisma";
 import dayjs from "dayjs";
 import { CreateConsumption } from "../interfaces/createConsumption.interface";
-import { log } from "console";
 
 class ConsumptionService {
   create(data: CreateConsumption) {
@@ -58,6 +57,12 @@ class ConsumptionService {
       return null;
     }
 
+    await prisma.consumption.deleteMany({
+      where: {
+        companyId: electricityIndexes[0].companyId,
+      },
+    });
+
     const removedLastIndex = electricityIndexes.slice(0, -1);
 
     for (const electricityIndex of removedLastIndex) {
@@ -75,19 +80,12 @@ class ConsumptionService {
 
       for (let i = 0; i < diffDayCount; i++) {
         const date = startDate.add(i, "days").toISOString();
-        const dateControl = await this.findFirst(
-          electricityIndex.companyId,
-          new Date(date),
-        );
-        if (!dateControl) {
-          await this.create({
-            companyId: electricityIndex.companyId,
-            date: new Date(date),
-            value: diffConsumptionByDay,
-          });
-        } else {
-          await this.update(dateControl.id, diffConsumptionByDay);
-        }
+
+        await this.create({
+          companyId: electricityIndex.companyId,
+          date: new Date(date),
+          value: diffConsumptionByDay,
+        });
       }
     }
 

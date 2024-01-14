@@ -33,8 +33,6 @@ class ConsumptionController {
         userExits.company?.id as string,
       );
 
-      console.log(consumption);
-
       return res.status(200).json(consumption);
     } catch (e: any) {
       return res.status(500).json({
