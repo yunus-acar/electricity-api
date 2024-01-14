@@ -14,9 +14,9 @@ This project includes a REST API that calculates energy consumption based on dat
    cd electricity-api
    ```
 
-3. Copy `.env.example` to `.env`
+3. Copy `.env.example` to `.env.prod` and `.env`
    ```bash
-       cp .env.example .env
+       cp .env.example .env.prod && cp .env.example .env
    ```
 4. Start the production with docker
       ```bash
