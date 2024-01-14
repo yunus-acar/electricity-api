@@ -1,0 +1,51 @@
+name: Deployment
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" >> ./.env
+      - name: Build the Docker compose services
+        run: |
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} docker-compose build
+      - name: Docker compose up
+        run: |
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} docker-compose up -d
+      - name: Wait for the services to be ready
+        run: |
+          sleep 10
+      - name: Prisma Schema Push
+        run: |
+          yarn push
+      - name: Health Check
+        run: |
+          run: curl -s http://localhost:4000/health || exit 1
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to aws ec2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ./electricity-api
+            git pull
+            docker-compose down api
+            docker-compose build api
+            docker-compose up -d api
+      - name: Health Check
+        run: |
+          run: curl -s http://${{ secrets.SSH_HOST }}:4000/health || exit 1
