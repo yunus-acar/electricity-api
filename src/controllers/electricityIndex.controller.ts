@@ -148,6 +148,17 @@ class ElectricityIndexController {
 
       await electricityIndex.delete(id);
 
+      const indexes = await electricityIndex.findMany(
+        {
+          company: {
+            id: userExits.company?.id as string,
+          },
+        },
+        "asc",
+      );
+
+      await consumption.calculateConsumption(indexes);
+
       return res.status(200).json({
         message: "Electricity index deleted",
       });
