@@ -38,5 +38,5 @@ volumes:
   db_data:
     driver: local
 networks:
-  networkName:
+  custom_network:
     driver: bridge
