@@ -51,9 +51,9 @@ jobs:
           script: |
             cd ./electricity-api
             git pull
-            docker-compose down api
-            docker-compose build api
-            docker-compose up -d api
+            docker compose down api
+            docker compose build api
+            docker compose up -d api
       - name: Health Check
         run: |
           curl -s http://${{ secrets.SSH_HOST }}:4000/health || exit 1
