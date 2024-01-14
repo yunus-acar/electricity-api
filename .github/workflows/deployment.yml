@@ -12,8 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Create .env file
+        working-directory: .
         run: |
           echo "${{ secrets.ENV_FILE }}" >> ./.env
+          echo "${{ secrets.PROD_ENV_FILE }}" >> ./.env.prod
       - name: Build the Docker compose services
         run: |
           POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} docker-compose build

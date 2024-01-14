@@ -4,3 +4,4 @@ postgres-data
 dist
 .idea
 .vscode
+.env.prod
