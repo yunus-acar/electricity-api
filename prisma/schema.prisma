@@ -41,7 +41,7 @@ model Consumption {
   id        String   @id @default(uuid())
   value     Float
   date      DateTime
-  company   Company  @relation(fields: [companyId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String
   createdAt DateTime @default(now())
 }
